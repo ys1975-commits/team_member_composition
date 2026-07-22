@@ -182,9 +182,33 @@
   .team-header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 8px 9px 12px;
+    gap: 4px;
+    padding: 10px 8px 9px 8px;
     border-top: 4px solid var(--team-accent);
+  }
+  .team-column.dragging-source { opacity: 0.4; }
+  .team-drag-handle {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: var(--ink-soft);
+    touch-action: none;
+    border-radius: 6px;
+  }
+  .team-drag-handle:hover { background: var(--surface-muted); }
+  .team-drag-handle:active { cursor: grabbing; }
+  .team-drag-ghost {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: var(--shadow-drag);
+    border-radius: var(--radius-md);
+    opacity: 0.92;
+    transform: rotate(-1deg);
   }
   .team-name {
     flex: 1;
@@ -591,6 +615,9 @@
     return '' +
       '<section class="team-column" data-team-id="' + team.id + '" style="--team-accent: var(--team-' + colorIdx + '); --team-accent-soft: var(--team-' + colorIdx + '-soft);">' +
         '<div class="team-header">' +
+          '<div class="team-drag-handle" data-action="team-drag-handle" data-team-id="' + team.id + '" aria-label="ドラッグしてチームの並び替え" title="ドラッグして並び替え">' +
+            '<span class="drag-dots"><span></span><span></span><span></span><span></span><span></span><span></span></span>' +
+          '</div>' +
           '<input type="text" class="team-name" data-action="rename-team" data-team-id="' + team.id + '" value="' + escapeHtml(team.name) + '" aria-label="チーム名">' +
           '<span class="team-count">' + team.members.length + '人</span>' +
           '<button type="button" class="team-delete" data-action="delete-team" data-team-id="' + team.id + '" aria-label="チームを削除" title="チームを削除">×</button>' +
@@ -794,6 +821,17 @@
     if (source === target && idx < insertAt) insertAt -= 1;
     insertAt = Math.max(0, Math.min(insertAt, target.members.length));
     target.members.splice(insertAt, 0, member);
+    saveState();
+  }
+
+  function moveTeam(teamId, targetIndex) {
+    var idx = state.teams.findIndex(function (t) { return t.id === teamId; });
+    if (idx === -1) return;
+    var team = state.teams.splice(idx, 1)[0];
+    var insertAt = targetIndex;
+    if (idx < insertAt) insertAt -= 1;
+    insertAt = Math.max(0, Math.min(insertAt, state.teams.length));
+    state.teams.splice(insertAt, 0, team);
     saveState();
   }
 
@@ -1137,6 +1175,76 @@
 
   document.addEventListener('pointerup', function (e) { endDrag(e, true); });
   document.addEventListener('pointercancel', function (e) { endDrag(e, false); });
+
+  // ---------- drag and drop (team column reordering) ----------
+
+  var teamDragState = null;
+
+  document.addEventListener('pointerdown', function (e) {
+    var handle = e.target.closest('[data-action="team-drag-handle"]');
+    if (!handle) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    startTeamDrag(e, handle);
+  });
+
+  function startTeamDrag(e, handle) {
+    var column = handle.closest('.team-column');
+    var rect = column.getBoundingClientRect();
+    var ghost = column.cloneNode(true);
+    ghost.classList.add('team-drag-ghost');
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = rect.left + 'px';
+    ghost.style.top = rect.top + 'px';
+    document.body.appendChild(ghost);
+
+    teamDragState = {
+      pointerId: e.pointerId,
+      teamId: handle.dataset.teamId,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
+      column: column,
+      ghost: ghost,
+      hoverIndex: null
+    };
+    column.classList.add('dragging-source');
+    handle.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
+
+  document.addEventListener('pointermove', function (e) {
+    if (!teamDragState || e.pointerId !== teamDragState.pointerId) return;
+    teamDragState.ghost.style.left = (e.clientX - teamDragState.offsetX) + 'px';
+    teamDragState.ghost.style.top = (e.clientY - teamDragState.offsetY) + 'px';
+    teamDragState.hoverIndex = computeTeamInsertIndex(e.clientX, e.clientY, teamDragState.column);
+  });
+
+  function computeTeamInsertIndex(clientX, clientY, excludeEl) {
+    var columns = Array.prototype.slice.call(boardEl.querySelectorAll('.team-column')).filter(function (c) { return c !== excludeEl; });
+    for (var i = 0; i < columns.length; i++) {
+      var r = columns[i].getBoundingClientRect();
+      if (clientY < r.top) return i;
+      if (clientY <= r.bottom) {
+        var midX = r.left + r.width / 2;
+        if (clientX < midX) return i;
+      }
+    }
+    return columns.length;
+  }
+
+  function endTeamDrag(e, commit) {
+    if (!teamDragState || e.pointerId !== teamDragState.pointerId) return;
+    var d = teamDragState;
+    d.ghost.remove();
+    d.column.classList.remove('dragging-source');
+    teamDragState = null;
+    if (commit && d.hoverIndex !== null) {
+      moveTeam(d.teamId, d.hoverIndex);
+      render();
+    }
+  }
+
+  document.addEventListener('pointerup', function (e) { endTeamDrag(e, true); });
+  document.addEventListener('pointercancel', function (e) { endTeamDrag(e, false); });
 
   // ---------- init ----------
 
