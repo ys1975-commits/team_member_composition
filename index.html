@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LAB3 編成">
+<meta name="color-scheme" content="light dark">
+<title>チーム編成 | LAB3KOBE</title>
+<style>
+  :root {
+    --bg: #f5f2ea;
+    --surface: #ffffff;
+    --surface-muted: #faf7f0;
+    --ink: #221f1b;
+    --ink-soft: #79705f;
+    --border: #e3ddcf;
+    --danger: #b3402f;
+    --danger-soft: #f6e4e0;
+    --warn: #96631a;
+    --warn-soft: #f7edd8;
+    --focus: #221f1b;
+    --shadow-sm: 0 1px 2px rgba(34,31,27,0.06);
+    --shadow-md: 0 8px 24px rgba(34,31,27,0.14);
+    --shadow-drag: 0 18px 40px rgba(34,31,27,0.30);
+    --radius-sm: 7px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+
+    --team-1: #cf5546; --team-1-soft:#f6e2de;
+    --team-2: #3b7eb0; --team-2-soft:#dfeaf3;
+    --team-3: #4c9a63; --team-3-soft:#e2f0e4;
+    --team-4: #c8922f; --team-4-soft:#f5ecd7;
+    --team-5: #8c6bb5; --team-5-soft:#ece5f5;
+    --team-6: #d97a38; --team-6-soft:#f7e5d3;
+    --team-7: #b8567f; --team-7-soft:#f5e0ea;
+    --team-8: #3f8f88; --team-8-soft:#dcedec;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --surface: #262320;
+      --surface-muted: #2e2a25;
+      --ink: #f3efe6;
+      --ink-soft: #a79e8d;
+      --border: #3c362e;
+      --danger: #e2685a;
+      --danger-soft: #40261f;
+      --warn: #dfa95e;
+      --warn-soft: #3b3020;
+      --focus: #f3efe6;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.45);
+      --shadow-drag: 0 18px 40px rgba(0,0,0,0.6);
+
+      --team-1: #e2776a; --team-1-soft:#3c2622;
+      --team-2: #6ba3cf; --team-2-soft:#20303a;
+      --team-3: #74b787; --team-3-soft:#22342a;
+      --team-4: #d9ac5c; --team-4-soft:#3a3221;
+      --team-5: #ab8bd1; --team-5-soft:#2f2a3d;
+      --team-6: #e29a63; --team-6-soft:#3a2e20;
+      --team-7: #d180a3; --team-7-soft:#3a2530;
+      --team-8: #63aca5; --team-8-soft:#1f3634;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f2ea; --surface:#ffffff; --surface-muted:#faf7f0; --ink:#221f1b; --ink-soft:#79705f; --border:#e3ddcf; --danger:#b3402f; --danger-soft:#f6e4e0; --warn:#96631a; --warn-soft:#f7edd8; --focus:#221f1b;
+    --shadow-sm: 0 1px 2px rgba(34,31,27,0.06); --shadow-md: 0 8px 24px rgba(34,31,27,0.14); --shadow-drag: 0 18px 40px rgba(34,31,27,0.30);
+    --team-1: #cf5546; --team-1-soft:#f6e2de; --team-2: #3b7eb0; --team-2-soft:#dfeaf3; --team-3: #4c9a63; --team-3-soft:#e2f0e4; --team-4: #c8922f; --team-4-soft:#f5ecd7; --team-5: #8c6bb5; --team-5-soft:#ece5f5; --team-6: #d97a38; --team-6-soft:#f7e5d3; --team-7: #b8567f; --team-7-soft:#f5e0ea; --team-8: #3f8f88; --team-8-soft:#dcedec;
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1a17; --surface: #262320; --surface-muted: #2e2a25; --ink: #f3efe6; --ink-soft: #a79e8d; --border: #3c362e; --danger: #e2685a; --danger-soft:#40261f; --warn:#dfa95e; --warn-soft:#3b3020; --focus:#f3efe6;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3); --shadow-md: 0 8px 24px rgba(0,0,0,0.45); --shadow-drag: 0 18px 40px rgba(0,0,0,0.6);
+    --team-1: #e2776a; --team-1-soft:#3c2622; --team-2: #6ba3cf; --team-2-soft:#20303a; --team-3: #74b787; --team-3-soft:#22342a; --team-4: #d9ac5c; --team-4-soft:#3a3221; --team-5: #ab8bd1; --team-5-soft:#2f2a3d; --team-6: #e29a63; --team-6-soft:#3a2e20; --team-7: #d180a3; --team-7-soft:#3a2530; --team-8: #63aca5; --team-8-soft:#1f3634;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    color: var(--ink);
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, input { -webkit-tap-highlight-color: transparent; }
+
+  #lab3-team-app {
+    min-height: 100vh;
+    padding: 24px 22px 100px;
+  }
+
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-right: auto;
+  }
+  .brand-mark {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  .brand-sub {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .roster-stat {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hint-line {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 10px 0 22px;
+    line-height: 1.6;
+  }
+
+  .btn {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.08s, opacity 0.15s;
+    touch-action: manipulation;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--ink-soft); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { background: transparent; color: var(--ink-soft); border-color: transparent; }
+  .btn-ghost:hover { color: var(--danger); border-color: var(--danger-soft); }
+  .btn-danger { color: var(--danger); border-color: var(--danger-soft); background: var(--danger-soft); }
+  .btn-file-label { display: inline-flex; align-items: center; gap: 8px; }
+
+  .board {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .team-column {
+    flex: 1 1 260px;
+    min-width: 240px;
+    max-width: 340px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .team-column.drop-target {
+    border-color: var(--team-accent);
+    box-shadow: 0 0 0 3px var(--team-accent-soft);
+    background: var(--surface-muted);
+  }
+  .team-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 8px 9px 12px;
+    border-top: 4px solid var(--team-accent);
+  }
+  .team-name {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    padding: 5px 6px;
+    border-radius: 6px;
+  }
+  .team-name:hover { background: var(--surface-muted); }
+  .team-name:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; background: var(--surface-muted); }
+  .team-count {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .team-delete {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1;
+    padding: 5px 8px;
+    border-radius: 6px;
+  }
+  .team-delete:hover { color: var(--danger); background: var(--danger-soft); }
+  .team-delete:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px 8px 8px;
+    min-height: 44px;
+  }
+  .team-add-member {
+    margin: 0 8px 8px;
+    width: calc(100% - 16px);
+    padding: 6px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .team-add-member:hover { border-color: var(--ink-soft); color: var(--ink); }
+  .team-add-member:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .member-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 4px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .member-card.dragging-source { opacity: 0.35; }
+  .member-card.is-duplicate { border-color: var(--warn); background: var(--warn-soft); }
+  .dup-flag {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--warn);
+  }
+  .drag-handle {
+    flex-shrink: 0;
+    width: 28px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    color: var(--ink-soft);
+    touch-action: none;
+    border-radius: 6px;
+  }
+  .drag-handle:hover { background: var(--border); }
+  .drag-handle:active { cursor: grabbing; }
+  .drag-dots {
+    display: grid;
+    grid-template-columns: repeat(2, 3.5px);
+    grid-template-rows: repeat(3, 3.5px);
+    gap: 3.5px;
+  }
+  .drag-dots span { width: 3.5px; height: 3.5px; border-radius: 50%; background: currentColor; }
+
+  .member-content { flex: 1; min-width: 0; }
+  .member-summary { cursor: pointer; border-radius: 6px; padding: 3px 6px; }
+  .member-summary:hover { background: var(--border); }
+  .member-name { font-size: 13px; font-weight: 400; word-break: break-word; }
+  .member-name.is-empty { color: var(--ink-soft); font-weight: 400; font-style: italic; }
+  .member-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    padding: 2px 3px 2px 7px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink-soft);
+  }
+  .tag-chip button {
+    border: none;
+    background: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 50%;
+  }
+  .tag-chip button:hover { color: var(--danger); background: var(--danger-soft); }
+
+  .member-editor {
+    margin: 8px 6px 4px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .member-editor input[type="text"] {
+    font: inherit;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--ink);
+    width: 100%;
+  }
+  .member-editor input[type="text"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .field-label { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.3px; }
+  .tag-add-row { display: flex; gap: 6px; }
+  .tag-add-row input { flex: 1; }
+  .member-editor-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .drag-ghost {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: var(--shadow-drag);
+    border-radius: var(--radius-sm);
+    opacity: 0.96;
+    transform: rotate(-1.5deg);
+  }
+  .drag-ghost .member-editor { display: none; }
+
+  .empty-hint {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 60px;
+    line-height: 1.8;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,26,23,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 2000;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-md);
+  }
+  .modal h2 { margin: 0 0 8px; font-size: 17px; }
+  .modal p.modal-hint { margin: 0 0 14px; font-size: 13px; color: var(--ink-soft); line-height: 1.7; white-space: pre-wrap; }
+  .modal textarea {
+    width: 100%;
+    min-height: 220px;
+    font: inherit;
+    font-size: 12.5px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-muted);
+    color: var(--ink);
+    resize: vertical;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    line-height: 1.7;
+  }
+  .modal textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .modal-file-row { margin-top: 12px; font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .modal-file-row input[type="file"] { display: none; }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 11px 20px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    box-shadow: var(--shadow-md);
+    z-index: 3000;
+    max-width: 90vw;
+  }
+
+  @media (max-width: 640px) {
+    #lab3-team-app { padding: 18px 14px 90px; }
+    .team-column { flex-basis: 100%; max-width: 100%; }
+    .brand-sub { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.001ms !important;
+      animation-duration: 0.001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="lab3-team-app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">LAB3</span>
+      <span class="brand-sub">FORMATION</span>
+    </div>
+    <div class="roster-stat" id="rosterStat">0人 ・ 0チーム</div>
+    <div class="toolbar">
+      <button type="button" class="btn" data-action="import">読み込み</button>
+      <button type="button" class="btn" data-action="export">書き出し</button>
+      <button type="button" class="btn btn-primary" data-action="add-team">＋ チーム追加</button>
+      <button type="button" class="btn btn-ghost" data-action="reset">全消去</button>
+    </div>
+  </header>
+  <p class="hint-line">カード左の「⠿」をつまんで別のチーム枠へドラッグすると移動できます。名前部分をタップすると、熟練度やメモのタグを編集できます。<br>※データはこの端末のブラウザ内に保存されます。他の端末に移す・長期保存する場合は「書き出し」をご利用ください。</p>
+
+  <main class="board" id="board"></main>
+  <p class="empty-hint" id="emptyHint" hidden>まだチームがありません。<br>「＋チーム追加」または「読み込み」から始めてください。</p>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'lab3-team-formation-v1';
+  var TEAM_COLOR_COUNT = 8;
+
+  var idCounter = 0;
+  var expandedMemberId = null;
+  var dragState = null;
+
+  function uid(prefix) {
+    idCounter += 1;
+    return prefix + '_' + Date.now().toString(36) + '_' + idCounter.toString(36);
+  }
+
+  function createDefaultState() {
+    return {
+      teams: [
+        { id: uid('team'), name: 'Aチーム', colorIndex: 0, members: [] },
+        { id: uid('team'), name: 'Bチーム', colorIndex: 1, members: [] },
+        { id: uid('team'), name: 'Cチーム', colorIndex: 2, members: [] }
+      ],
+      nextColorIndex: 3
+    };
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.teams)) return null;
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      /* storage unavailable; app continues in-memory for this session */
+    }
+  }
+
+  var state = loadState() || createDefaultState();
+
+  function findMember(memberId) {
+    for (var i = 0; i < state.teams.length; i++) {
+      var team = state.teams[i];
+      for (var j = 0; j < team.members.length; j++) {
+        if (team.members[j].id === memberId) return team.members[j];
+      }
+    }
+    return null;
+  }
+
+  function findTeam(teamId) {
+    for (var i = 0; i < state.teams.length; i++) {
+      if (state.teams[i].id === teamId) return state.teams[i];
+    }
+    return null;
+  }
+
+  // ---------- duplicate names ----------
+
+  function normalizeName(name) {
+    return String(name == null ? '' : name).trim();
+  }
+
+  // Returns the team holding a member with this name, ignoring exceptMemberId.
+  function findNameOwner(name, exceptMemberId) {
+    var target = normalizeName(name);
+    if (!target) return null;
+    for (var i = 0; i < state.teams.length; i++) {
+      var team = state.teams[i];
+      for (var j = 0; j < team.members.length; j++) {
+        var m = team.members[j];
+        if (m.id === exceptMemberId) continue;
+        if (normalizeName(m.name) === target) return team;
+      }
+    }
+    return null;
+  }
+
+  // Names that appear on more than one member across the whole roster.
+  function duplicateNames() {
+    var seen = {};
+    var dups = {};
+    for (var i = 0; i < state.teams.length; i++) {
+      var members = state.teams[i].members;
+      for (var j = 0; j < members.length; j++) {
+        var n = normalizeName(members[j].name);
+        if (!n) continue;
+        if (seen[n]) dups[n] = true;
+        seen[n] = true;
+      }
+    }
+    return dups;
+  }
+
+  // ---------- rendering ----------
+
+  var boardEl = document.getElementById('board');
+  var rosterStatEl = document.getElementById('rosterStat');
+  var emptyHintEl = document.getElementById('emptyHint');
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function render() {
+    var totalMembers = state.teams.reduce(function (sum, t) { return sum + t.members.length; }, 0);
+    rosterStatEl.textContent = totalMembers + '人 ・ ' + state.teams.length + 'チーム';
+    emptyHintEl.hidden = state.teams.length > 0;
+    var dups = duplicateNames();
+    boardEl.innerHTML = state.teams.map(function (team) { return renderTeam(team, dups); }).join('');
+  }
+
+  function renderTeam(team, dups) {
+    var colorIdx = (team.colorIndex % TEAM_COLOR_COUNT) + 1;
+    var membersHtml = team.members.map(function (m) { return renderMember(m, team.id, dups); }).join('');
+    return '' +
+      '<section class="team-column" data-team-id="' + team.id + '" style="--team-accent: var(--team-' + colorIdx + '); --team-accent-soft: var(--team-' + colorIdx + '-soft);">' +
+        '<div class="team-header">' +
+          '<input type="text" class="team-name" data-action="rename-team" data-team-id="' + team.id + '" value="' + escapeHtml(team.name) + '" aria-label="チーム名">' +
+          '<span class="team-count">' + team.members.length + '人</span>' +
+          '<button type="button" class="team-delete" data-action="delete-team" data-team-id="' + team.id + '" aria-label="チームを削除" title="チームを削除">×</button>' +
+        '</div>' +
+        '<div class="member-list" data-team-id="' + team.id + '">' + membersHtml + '</div>' +
+        '<button type="button" class="team-add-member" data-action="add-member" data-team-id="' + team.id + '">＋ メンバー追加</button>' +
+      '</section>';
+  }
+
+  function renderMember(member, teamId, dups) {
+    var isExpanded = expandedMemberId === member.id;
+    var isDuplicate = !!(dups && dups[normalizeName(member.name)]);
+    var tagsHtml = member.tags.map(function (tag, i) {
+      return '<span class="tag-chip">' + escapeHtml(tag) +
+        '<button type="button" data-action="remove-tag" data-member-id="' + member.id + '" data-tag-index="' + i + '" aria-label="タグを削除">×</button></span>';
+    }).join('');
+
+    var editorHtml = '';
+    if (isExpanded) {
+      editorHtml = '' +
+        '<div class="member-editor">' +
+          '<div class="field-label">名前</div>' +
+          '<input type="text" data-action="rename-member" data-member-id="' + member.id + '" value="' + escapeHtml(member.name) + '" placeholder="名前" aria-label="名前を編集">' +
+          '<div class="field-label">タグ・メモ（熟練度A、出番少なく、10代 など自由に）</div>' +
+          '<div class="tag-add-row">' +
+            '<input type="text" data-action="new-tag-input" data-member-id="' + member.id + '" placeholder="タグを入力してEnterまたは追加" aria-label="タグを追加">' +
+            '<button type="button" class="btn" data-action="add-tag" data-member-id="' + member.id + '">追加</button>' +
+          '</div>' +
+          '<div class="member-editor-actions">' +
+            '<button type="button" class="btn btn-danger" data-action="delete-member" data-team-id="' + teamId + '" data-member-id="' + member.id + '">メンバーを削除</button>' +
+            '<button type="button" class="btn" data-action="collapse-member">閉じる</button>' +
+          '</div>' +
+        '</div>';
+    }
+
+    var nameHtml = escapeHtml(member.name);
+    var nameClass = 'member-name';
+    if (!member.name) { nameHtml = '（名前未設定）'; nameClass += ' is-empty'; }
+
+    return '' +
+      '<div class="member-card' + (isDuplicate ? ' is-duplicate' : '') + '" data-member-id="' + member.id + '" data-team-id="' + teamId + '">' +
+        '<div class="drag-handle" data-action="drag-handle" data-member-id="' + member.id + '" data-team-id="' + teamId + '" aria-label="ドラッグして別のチームへ移動" title="ドラッグして移動">' +
+          '<span class="drag-dots"><span></span><span></span><span></span><span></span><span></span><span></span></span>' +
+        '</div>' +
+        '<div class="member-content">' +
+          '<div class="member-summary" data-action="toggle-member" data-member-id="' + member.id + '">' +
+            '<div class="' + nameClass + '">' + nameHtml + (isDuplicate ? '<span class="dup-flag">重複</span>' : '') + '</div>' +
+            (member.tags.length ? '<div class="member-tags">' + tagsHtml + '</div>' : '') +
+          '</div>' +
+          editorHtml +
+        '</div>' +
+      '</div>';
+  }
+
+  // ---------- state mutations ----------
+
+  function addTag(memberId, rawValue) {
+    var value = (rawValue || '').trim();
+    if (!value) return;
+    var member = findMember(memberId);
+    if (!member) return;
+    member.tags.push(value);
+    saveState();
+    render();
+    focusTagInput(memberId);
+  }
+
+  function focusTagInput(memberId) {
+    requestAnimationFrame(function () {
+      var input = document.querySelector('[data-action="new-tag-input"][data-member-id="' + memberId + '"]');
+      if (input) input.focus();
+    });
+  }
+
+  function removeTag(memberId, index) {
+    var member = findMember(memberId);
+    if (!member) return;
+    member.tags.splice(index, 1);
+    saveState();
+    render();
+  }
+
+  function renameMember(memberId, name) {
+    var member = findMember(memberId);
+    if (!member) return;
+    var trimmed = normalizeName(name);
+    var owner = findNameOwner(trimmed, memberId);
+    if (owner) {
+      render();
+      showAlert('「' + trimmed + '」は ' + owner.name + ' にすでに登録されています。\n同じ名前は登録できません。別の表記にするか、もう一方を削除してください。');
+      return;
+    }
+    member.name = trimmed;
+    saveState();
+    render();
+  }
+
+  function renameTeam(teamId, name) {
+    var team = findTeam(teamId);
+    if (!team) return;
+    team.name = name.trim() || team.name;
+    saveState();
+    render();
+  }
+
+  function deleteMember(teamId, memberId) {
+    var team = findTeam(teamId);
+    if (!team) return;
+    var member = team.members.find(function (m) { return m.id === memberId; });
+    if (!member) return;
+    var label = member.name || '（名前未設定）';
+    showConfirm({
+      title: 'メンバーを削除',
+      message: label + ' を削除します。よろしいですか？',
+      confirmLabel: '削除する',
+      danger: true,
+      onConfirm: function () {
+        var idx = team.members.findIndex(function (m) { return m.id === memberId; });
+        if (idx === -1) return;
+        team.members.splice(idx, 1);
+        if (expandedMemberId === memberId) expandedMemberId = null;
+        saveState();
+        render();
+      }
+    });
+  }
+
+  function addMember(teamId) {
+    var team = findTeam(teamId);
+    if (!team) return;
+    var member = { id: uid('m'), name: '', tags: [] };
+    team.members.push(member);
+    expandedMemberId = member.id;
+    saveState();
+    render();
+    requestAnimationFrame(function () {
+      var input = document.querySelector('[data-action="rename-member"][data-member-id="' + member.id + '"]');
+      if (input) input.focus();
+    });
+  }
+
+  function nextTeamColorIndex() {
+    var idx = state.nextColorIndex || 0;
+    state.nextColorIndex = idx + 1;
+    return idx;
+  }
+
+  function addTeam() {
+    var team = { id: uid('team'), name: '新しいチーム', colorIndex: nextTeamColorIndex(), members: [] };
+    state.teams.push(team);
+    saveState();
+    render();
+    requestAnimationFrame(function () {
+      var input = document.querySelector('.team-name[data-team-id="' + team.id + '"]');
+      if (input) { input.focus(); input.select(); }
+    });
+  }
+
+  function deleteTeam(teamId) {
+    var team = findTeam(teamId);
+    if (!team) return;
+    var msg = team.members.length > 0
+      ? team.name + '（' + team.members.length + '人）を削除します。所属メンバーも全て削除されます。よろしいですか？'
+      : team.name + ' を削除します。よろしいですか？';
+    showConfirm({
+      title: 'チームを削除',
+      message: msg,
+      confirmLabel: '削除する',
+      danger: true,
+      onConfirm: function () {
+        state.teams = state.teams.filter(function (t) { return t.id !== teamId; });
+        saveState();
+        render();
+      }
+    });
+  }
+
+  function resetAll() {
+    showConfirm({
+      title: '全て消去',
+      message: '全てのチームとメンバーを消去します。元に戻せません。よろしいですか？',
+      confirmLabel: '消去する',
+      danger: true,
+      onConfirm: function () {
+        state = { teams: [], nextColorIndex: 0 };
+        saveState();
+        render();
+      }
+    });
+  }
+
+  function moveMember(memberId, sourceTeamId, targetTeamId, targetIndex) {
+    var source = findTeam(sourceTeamId);
+    if (!source) return;
+    var idx = source.members.findIndex(function (m) { return m.id === memberId; });
+    if (idx === -1) return;
+    var member = source.members.splice(idx, 1)[0];
+    var target = findTeam(targetTeamId);
+    if (!target) { source.members.splice(idx, 0, member); return; }
+    var insertAt = targetIndex;
+    if (source === target && idx < insertAt) insertAt -= 1;
+    insertAt = Math.max(0, Math.min(insertAt, target.members.length));
+    target.members.splice(insertAt, 0, member);
+    saveState();
+  }
+
+  // ---------- import / export ----------
+
+  function parseRoster(text) {
+    var lines = text.split(/\r?\n/);
+    var teams = [];
+    var current = null;
+    var numberedLine = /^\s*(?:[0-9]+|[０-９]+)[.．、,，)）]\s*(.+?)\s*$/;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) continue;
+      var m = line.match(numberedLine);
+      if (m) {
+        if (!current) {
+          current = { id: uid('team'), name: '未分類', colorIndex: teams.length, members: [] };
+          teams.push(current);
+        }
+        current.members.push({ id: uid('m'), name: m[1].trim(), tags: [] });
+      } else {
+        current = { id: uid('team'), name: line, colorIndex: teams.length, members: [] };
+        teams.push(current);
+      }
+    }
+    return teams;
+  }
+
+  function serializeRoster() {
+    return state.teams.map(function (team) {
+      var lines = team.members.map(function (m, i) {
+        var tagPart = m.tags.length ? ' (' + m.tags.join(', ') + ')' : '';
+        return (i + 1) + '. ' + (m.name || '（名前未設定）') + tagPart;
+      });
+      return team.name + '\n' + lines.join('\n');
+    }).join('\n\n');
+  }
+
+  function openImportModal() {
+    openModal('' +
+      '<h2>読み込み</h2>' +
+      '<p class="modal-hint">これまで使っていたテキスト形式（チーム名の見出し＋「番号. 名前」の並び）をそのまま貼り付けられます。読み込むと現在の内容と置き換わります。</p>' +
+      '<textarea id="importTextarea" placeholder="Aチーム\n1. 山田太郎\n2. 佐藤花子\n\nBチーム\n1. 鈴木一郎"></textarea>' +
+      '<div class="modal-file-row">' +
+        '<label class="btn btn-file-label">ファイルを選択<input type="file" accept=".txt,text/plain" id="importFile"></label>' +
+        '<span id="importFileName"></span>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn" data-action="close-modal">キャンセル</button>' +
+        '<button type="button" class="btn btn-primary" data-action="confirm-import">読み込む</button>' +
+      '</div>');
+    document.getElementById('importFile').addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('importFileName').textContent = file.name;
+      file.text().then(function (text) {
+        document.getElementById('importTextarea').value = text;
+      });
+    });
+  }
+
+  function confirmImport() {
+    var text = document.getElementById('importTextarea').value;
+    if (!text.trim()) { closeModal(); return; }
+    var teams = parseRoster(text);
+    if (teams.length === 0) {
+      showAlert('読み込める内容が見つかりませんでした。形式をご確認ください。');
+      return;
+    }
+    var hasExisting = state.teams.some(function (t) { return t.members.length > 0; });
+    if (hasExisting) {
+      showConfirm({
+        title: '読み込み',
+        message: '現在の内容を置き換えます。よろしいですか？',
+        confirmLabel: '置き換える',
+        danger: true,
+        onConfirm: function () { applyImport(teams); }
+      });
+    } else {
+      applyImport(teams);
+    }
+  }
+
+  function applyImport(teams) {
+    state = { teams: teams, nextColorIndex: teams.length };
+    saveState();
+    closeModal();
+    render();
+    var dupList = Object.keys(duplicateNames());
+    if (dupList.length) {
+      showAlert('読み込みました。\n\nただし同じ名前が複数あります（' + dupList.join('、') + '）。\n該当のカードをオレンジ色で表示しています。名前を変えるか、不要な方を削除してください。');
+    } else {
+      showToast('読み込みました');
+    }
+  }
+
+  function openExportModal() {
+    var text = serializeRoster();
+    openModal('' +
+      '<h2>書き出し</h2>' +
+      '<p class="modal-hint">これまでのテキスト形式で出力します。タグ・メモは名前のあとに（　）で付記されます。</p>' +
+      '<textarea id="exportTextarea" readonly></textarea>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn" data-action="close-modal">閉じる</button>' +
+        '<button type="button" class="btn" data-action="download-export">ダウンロード</button>' +
+        '<button type="button" class="btn btn-primary" data-action="copy-export">コピー</button>' +
+      '</div>');
+    var ta = document.getElementById('exportTextarea');
+    ta.value = text;
+    requestAnimationFrame(function () { ta.focus(); ta.select(); });
+  }
+
+  function copyExport() {
+    var ta = document.getElementById('exportTextarea');
+    ta.select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ta.value).then(function () {
+        showToast('コピーしました');
+      }).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+    function fallbackCopy() {
+      try {
+        document.execCommand('copy');
+        showToast('コピーしました');
+      } catch (e) {
+        showToast('コピーできませんでした。手動で選択してコピーしてください');
+      }
+    }
+  }
+
+  function downloadExport() {
+    var text = document.getElementById('exportTextarea').value;
+    var filename = 'チーム編成.txt';
+    if (window.claude && window.claude.downloads && window.claude.downloads.save) {
+      window.claude.downloads.save({ filename: filename, data: text }).then(function () {
+        showToast('ダウンロードしました');
+      }).catch(function (err) {
+        if (err && err.code === 'declined') return;
+        showToast('ダウンロードできませんでした');
+      });
+      return;
+    }
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    showToast('ダウンロードしました');
+  }
+
+  // ---------- modal ----------
+
+  var modalOverlay = document.getElementById('modalOverlay');
+  var modalEl = document.getElementById('modal');
+
+  function openModal(html) {
+    modalEl.innerHTML = html;
+    modalOverlay.hidden = false;
+  }
+  function closeModal() {
+    modalOverlay.hidden = true;
+    modalEl.innerHTML = '';
+  }
+  modalOverlay.addEventListener('click', function (e) {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  function showConfirm(opts) {
+    openModal('' +
+      '<h2>' + escapeHtml(opts.title || '確認') + '</h2>' +
+      '<p class="modal-hint">' + escapeHtml(opts.message) + '</p>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn" data-action="close-modal">キャンセル</button>' +
+        '<button type="button" class="btn ' + (opts.danger ? 'btn-danger' : 'btn-primary') + '" id="modalConfirmBtn">' + escapeHtml(opts.confirmLabel || 'OK') + '</button>' +
+      '</div>');
+    document.getElementById('modalConfirmBtn').addEventListener('click', function () {
+      closeModal();
+      opts.onConfirm();
+    });
+  }
+
+  function showAlert(message) {
+    openModal('' +
+      '<h2>お知らせ</h2>' +
+      '<p class="modal-hint">' + escapeHtml(message) + '</p>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn btn-primary" data-action="close-modal">OK</button>' +
+      '</div>');
+  }
+
+  // ---------- toast ----------
+
+  var toastTimer = null;
+  var toastEl = document.getElementById('toast');
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2200);
+  }
+
+  // ---------- click / change / keydown delegation ----------
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-action]');
+    if (!el) return;
+    var action = el.dataset.action;
+    switch (action) {
+      case 'import': openImportModal(); break;
+      case 'export': openExportModal(); break;
+      case 'add-team': addTeam(); break;
+      case 'reset': resetAll(); break;
+      case 'close-modal': closeModal(); break;
+      case 'confirm-import': confirmImport(); break;
+      case 'copy-export': copyExport(); break;
+      case 'download-export': downloadExport(); break;
+      case 'toggle-member':
+        expandedMemberId = (expandedMemberId === el.dataset.memberId) ? null : el.dataset.memberId;
+        render();
+        break;
+      case 'collapse-member':
+        expandedMemberId = null;
+        render();
+        break;
+      case 'add-tag': {
+        var input = document.querySelector('[data-action="new-tag-input"][data-member-id="' + el.dataset.memberId + '"]');
+        addTag(el.dataset.memberId, input ? input.value : '');
+        break;
+      }
+      case 'remove-tag': removeTag(el.dataset.memberId, Number(el.dataset.tagIndex)); break;
+      case 'delete-member': deleteMember(el.dataset.teamId, el.dataset.memberId); break;
+      case 'add-member': addMember(el.dataset.teamId); break;
+      case 'delete-team': deleteTeam(el.dataset.teamId); break;
+      default: break;
+    }
+  });
+
+  document.addEventListener('change', function (e) {
+    if (e.target.matches('[data-action="rename-member"]')) {
+      renameMember(e.target.dataset.memberId, e.target.value);
+    } else if (e.target.matches('[data-action="rename-team"]')) {
+      renameTeam(e.target.dataset.teamId, e.target.value);
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.matches('[data-action="new-tag-input"]')) {
+      e.preventDefault();
+      addTag(e.target.dataset.memberId, e.target.value);
+    }
+    if (e.key === 'Escape' && !modalOverlay.hidden) {
+      closeModal();
+    }
+  });
+
+  // ---------- drag and drop (pointer events; works for mouse, touch, pen) ----------
+
+  document.addEventListener('pointerdown', function (e) {
+    var handle = e.target.closest('[data-action="drag-handle"]');
+    if (!handle) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    startDrag(e, handle);
+  });
+
+  function startDrag(e, handle) {
+    var card = handle.closest('.member-card');
+    var rect = card.getBoundingClientRect();
+    var ghost = card.cloneNode(true);
+    ghost.classList.add('drag-ghost');
+    ghost.style.width = rect.width + 'px';
+    ghost.style.left = rect.left + 'px';
+    ghost.style.top = rect.top + 'px';
+    document.body.appendChild(ghost);
+
+    dragState = {
+      pointerId: e.pointerId,
+      memberId: handle.dataset.memberId,
+      sourceTeamId: handle.dataset.teamId,
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
+      card: card,
+      ghost: ghost,
+      hoverTeamId: null,
+      hoverIndex: 0
+    };
+    card.classList.add('dragging-source');
+    handle.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
+
+  document.addEventListener('pointermove', function (e) {
+    if (!dragState || e.pointerId !== dragState.pointerId) return;
+    dragState.ghost.style.left = (e.clientX - dragState.offsetX) + 'px';
+    dragState.ghost.style.top = (e.clientY - dragState.offsetY) + 'px';
+
+    var elUnder = document.elementFromPoint(e.clientX, e.clientY);
+    var column = elUnder && elUnder.closest('.team-column');
+
+    var prevHighlighted = document.querySelectorAll('.team-column.drop-target');
+    for (var i = 0; i < prevHighlighted.length; i++) prevHighlighted[i].classList.remove('drop-target');
+
+    if (column) {
+      column.classList.add('drop-target');
+      dragState.hoverTeamId = column.dataset.teamId;
+      dragState.hoverIndex = computeInsertIndex(column, dragState.card, e.clientY);
+    } else {
+      dragState.hoverTeamId = null;
+    }
+  });
+
+  function computeInsertIndex(column, draggedCard, clientY) {
+    var list = column.querySelector('.member-list');
+    var cards = Array.prototype.slice.call(list.querySelectorAll('.member-card')).filter(function (c) { return c !== draggedCard; });
+    for (var i = 0; i < cards.length; i++) {
+      var r = cards[i].getBoundingClientRect();
+      var mid = r.top + r.height / 2;
+      if (clientY < mid) return i;
+    }
+    return cards.length;
+  }
+
+  function endDrag(e, commit) {
+    if (!dragState || e.pointerId !== dragState.pointerId) return;
+    var d = dragState;
+    d.ghost.remove();
+    d.card.classList.remove('dragging-source');
+    var highlighted = document.querySelectorAll('.team-column.drop-target');
+    for (var i = 0; i < highlighted.length; i++) highlighted[i].classList.remove('drop-target');
+    dragState = null;
+    if (commit && d.hoverTeamId) {
+      moveMember(d.memberId, d.sourceTeamId, d.hoverTeamId, d.hoverIndex);
+      render();
+    }
+  }
+
+  document.addEventListener('pointerup', function (e) { endDrag(e, true); });
+  document.addEventListener('pointercancel', function (e) { endDrag(e, false); });
+
+  // ---------- init ----------
+
+  render();
+})();
+</script>
+</body>
+</html>
