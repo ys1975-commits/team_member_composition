@@ -817,9 +817,7 @@
     var member = source.members.splice(idx, 1)[0];
     var target = findTeam(targetTeamId);
     if (!target) { source.members.splice(idx, 0, member); return; }
-    var insertAt = targetIndex;
-    if (source === target && idx < insertAt) insertAt -= 1;
-    insertAt = Math.max(0, Math.min(insertAt, target.members.length));
+    var insertAt = Math.max(0, Math.min(targetIndex, target.members.length));
     target.members.splice(insertAt, 0, member);
     saveState();
   }
@@ -828,9 +826,7 @@
     var idx = state.teams.findIndex(function (t) { return t.id === teamId; });
     if (idx === -1) return;
     var team = state.teams.splice(idx, 1)[0];
-    var insertAt = targetIndex;
-    if (idx < insertAt) insertAt -= 1;
-    insertAt = Math.max(0, Math.min(insertAt, state.teams.length));
+    var insertAt = Math.max(0, Math.min(targetIndex, state.teams.length));
     state.teams.splice(insertAt, 0, team);
     saveState();
   }
