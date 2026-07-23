@@ -1223,16 +1223,25 @@
   });
 
   function computeTeamInsertIndex(clientX, clientY, excludeEl) {
-    var columns = Array.prototype.slice.call(boardEl.querySelectorAll('.team-column')).filter(function (c) { return c !== excludeEl; });
-    if (columns.length === 0) return { index: 0, rowBreak: false };
+    // Geometry is computed over ALL columns, including the dragged one (its
+    // dimmed original card stays in place during the drag and is the most
+    // natural visual anchor). The resulting position is only translated to
+    // an index in the drag-excluded array at the very end.
+    var allCols = Array.prototype.slice.call(boardEl.querySelectorAll('.team-column'));
+    if (allCols.length === 0) return { index: 0, rowBreak: false };
+    var excludeIdx = allCols.indexOf(excludeEl);
 
-    var items = columns.map(function (c) { return { el: c, rect: c.getBoundingClientRect() }; });
+    function toTargetIndex(k) {
+      if (excludeIdx === -1 || k <= excludeIdx) return k;
+      return k - 1;
+    }
+
+    var items = allCols.map(function (c, idx) { return { el: c, idx: idx, rect: c.getBoundingClientRect() }; });
     var rows = [];
     items.forEach(function (item) {
       var row = rows.filter(function (r) { return Math.abs(r.top - item.rect.top) < 4; })[0];
-      if (!row) { row = { top: item.rect.top, bottom: item.rect.bottom, items: [] }; rows.push(row); }
+      if (!row) { row = { top: item.rect.top, items: [] }; rows.push(row); }
       row.items.push(item);
-      if (item.rect.bottom > row.bottom) row.bottom = item.rect.bottom;
     });
     rows.sort(function (a, b) { return a.top - b.top; });
     rows.forEach(function (r) { r.items.sort(function (a, b) { return a.rect.left - b.rect.left; }); });
@@ -1241,24 +1250,41 @@
       for (var j = 0; j < row.items.length; j++) {
         var r = row.items[j].rect;
         if (clientX < r.left + r.width / 2) {
-          return { index: columns.indexOf(row.items[j].el), rowBreak: j === 0 };
+          return { index: toTargetIndex(row.items[j].idx), rowBreak: j === 0 };
         }
       }
-      var lastEl = row.items[row.items.length - 1].el;
-      return { index: columns.indexOf(lastEl) + 1, rowBreak: false };
+      var lastItem = row.items[row.items.length - 1];
+      return { index: toTargetIndex(lastItem.idx + 1), rowBreak: false };
     }
 
-    for (var i = 0; i < rows.length - 1; i++) {
-      var boundary = (rows[i].bottom + rows[i + 1].top) / 2;
-      if (clientY < boundary) return pickInRow(rows[i]);
+    // Nearest column to the pointer within a row, by horizontal distance only
+    // (each card's OWN bottom edge matters here, not the row's tallest member,
+    // so a short card sitting next to a much taller one can still be targeted).
+    function nearestInRow(row) {
+      var best = row.items[0], bestDx = Infinity;
+      row.items.forEach(function (it) {
+        var dx = Math.max(it.rect.left - clientX, 0, clientX - it.rect.right);
+        if (dx < bestDx) { bestDx = dx; best = it; }
+      });
+      return best;
     }
 
-    var last = rows[rows.length - 1];
-    var rowHeight = last.bottom - last.top;
-    if (clientY <= last.bottom + Math.max(40, rowHeight * 0.6)) {
-      return pickInRow(last);
+    var BELOW_MARGIN = 24;
+
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (clientY < row.top) return pickInRow(row);
+
+      var near = nearestInRow(row);
+      if (clientY <= near.rect.bottom + BELOW_MARGIN) {
+        return pickInRow(row);
+      }
+      var nextRow = rows[i + 1];
+      if (!nextRow || clientY < nextRow.top) {
+        return { index: toTargetIndex(near.idx + 1), rowBreak: true };
+      }
     }
-    return { index: columns.length, rowBreak: true };
+    return { index: toTargetIndex(allCols.length), rowBreak: true };
   }
 
   function endTeamDrag(e, commit) {
