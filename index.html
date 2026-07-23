@@ -184,6 +184,25 @@
     box-shadow: 0 0 0 3px var(--team-accent-soft);
     background: var(--surface-muted);
   }
+  .lane.drop-target {
+    outline: 2px dashed var(--ink-soft);
+    outline-offset: 6px;
+    border-radius: var(--radius-md);
+  }
+  .team-drop-indicator {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ink-soft);
+  }
+  .team-drop-indicator.new-lane {
+    flex: 1 1 260px;
+    min-width: 240px;
+    max-width: 340px;
+    height: 64px;
+    border: 2px dashed var(--ink-soft);
+    border-radius: var(--radius-md);
+    opacity: 0.7;
+  }
   .team-header {
     display: flex;
     align-items: center;
@@ -1239,6 +1258,7 @@
     teamDragState.ghost.style.left = (e.clientX - teamDragState.offsetX) + 'px';
     teamDragState.ghost.style.top = (e.clientY - teamDragState.offsetY) + 'px';
     teamDragState.hoverIndex = computeTeamInsertIndex(e.clientX, e.clientY, teamDragState.column);
+    updateTeamDropIndicator(teamDragState.hoverIndex, teamDragState.column);
   });
 
   function computeTeamInsertIndex(clientX, clientY, excludeEl) {
@@ -1271,11 +1291,40 @@
     return { lane: laneNum, laneIndex: cards.length };
   }
 
+  function updateTeamDropIndicator(target, excludeEl) {
+    clearTeamDropIndicator();
+    if (!target) return;
+    var laneEl = boardEl.querySelector('.lane[data-lane="' + target.lane + '"]');
+    var indicator = document.createElement('div');
+    indicator.id = 'teamDropIndicator';
+    if (laneEl) {
+      indicator.className = 'team-drop-indicator';
+      laneEl.classList.add('drop-target');
+      var cards = Array.prototype.slice.call(laneEl.querySelectorAll('.team-column')).filter(function (c) { return c !== excludeEl; });
+      if (target.laneIndex >= cards.length) {
+        laneEl.appendChild(indicator);
+      } else {
+        laneEl.insertBefore(indicator, cards[target.laneIndex]);
+      }
+    } else {
+      indicator.className = 'team-drop-indicator new-lane';
+      boardEl.appendChild(indicator);
+    }
+  }
+
+  function clearTeamDropIndicator() {
+    var prevLane = document.querySelector('.lane.drop-target');
+    if (prevLane) prevLane.classList.remove('drop-target');
+    var old = document.getElementById('teamDropIndicator');
+    if (old) old.remove();
+  }
+
   function endTeamDrag(e, commit) {
     if (!teamDragState || e.pointerId !== teamDragState.pointerId) return;
     var d = teamDragState;
     d.ghost.remove();
     d.column.classList.remove('dragging-source');
+    clearTeamDropIndicator();
     teamDragState = null;
     if (commit && d.hoverIndex !== null) {
       moveTeam(d.teamId, d.hoverIndex.lane, d.hoverIndex.laneIndex);
