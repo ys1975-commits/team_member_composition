@@ -174,6 +174,7 @@
     overflow: hidden;
     transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
   }
+  .row-break { flex-basis: 100%; width: 0; height: 0; margin: 0 0 -18px 0; padding: 0; }
   .team-column.drop-target {
     border-color: var(--team-accent);
     box-shadow: 0 0 0 3px var(--team-accent-soft);
@@ -606,7 +607,10 @@
     rosterStatEl.textContent = totalMembers + '人 ・ ' + state.teams.length + 'チーム';
     emptyHintEl.hidden = state.teams.length > 0;
     var dups = duplicateNames();
-    boardEl.innerHTML = state.teams.map(function (team) { return renderTeam(team, dups); }).join('');
+    boardEl.innerHTML = state.teams.map(function (team, i) {
+      var breakHtml = (i > 0 && team.rowBreak) ? '<div class="row-break" aria-hidden="true"></div>' : '';
+      return breakHtml + renderTeam(team, dups);
+    }).join('');
   }
 
   function renderTeam(team, dups) {
@@ -822,11 +826,15 @@
     saveState();
   }
 
-  function moveTeam(teamId, targetIndex) {
+  function moveTeam(teamId, targetIndex, rowBreak) {
     var idx = state.teams.findIndex(function (t) { return t.id === teamId; });
     if (idx === -1) return;
     var team = state.teams.splice(idx, 1)[0];
     var insertAt = Math.max(0, Math.min(targetIndex, state.teams.length));
+    team.rowBreak = !!rowBreak;
+    if (team.rowBreak && state.teams[insertAt] && state.teams[insertAt].rowBreak) {
+      state.teams[insertAt].rowBreak = false;
+    }
     state.teams.splice(insertAt, 0, team);
     saveState();
   }
@@ -1216,15 +1224,41 @@
 
   function computeTeamInsertIndex(clientX, clientY, excludeEl) {
     var columns = Array.prototype.slice.call(boardEl.querySelectorAll('.team-column')).filter(function (c) { return c !== excludeEl; });
-    for (var i = 0; i < columns.length; i++) {
-      var r = columns[i].getBoundingClientRect();
-      if (clientY < r.top) return i;
-      if (clientY <= r.bottom) {
-        var midX = r.left + r.width / 2;
-        if (clientX < midX) return i;
+    if (columns.length === 0) return { index: 0, rowBreak: false };
+
+    var items = columns.map(function (c) { return { el: c, rect: c.getBoundingClientRect() }; });
+    var rows = [];
+    items.forEach(function (item) {
+      var row = rows.filter(function (r) { return Math.abs(r.top - item.rect.top) < 4; })[0];
+      if (!row) { row = { top: item.rect.top, bottom: item.rect.bottom, items: [] }; rows.push(row); }
+      row.items.push(item);
+      if (item.rect.bottom > row.bottom) row.bottom = item.rect.bottom;
+    });
+    rows.sort(function (a, b) { return a.top - b.top; });
+    rows.forEach(function (r) { r.items.sort(function (a, b) { return a.rect.left - b.rect.left; }); });
+
+    function pickInRow(row) {
+      for (var j = 0; j < row.items.length; j++) {
+        var r = row.items[j].rect;
+        if (clientX < r.left + r.width / 2) {
+          return { index: columns.indexOf(row.items[j].el), rowBreak: j === 0 };
+        }
       }
+      var lastEl = row.items[row.items.length - 1].el;
+      return { index: columns.indexOf(lastEl) + 1, rowBreak: false };
     }
-    return columns.length;
+
+    for (var i = 0; i < rows.length - 1; i++) {
+      var boundary = (rows[i].bottom + rows[i + 1].top) / 2;
+      if (clientY < boundary) return pickInRow(rows[i]);
+    }
+
+    var last = rows[rows.length - 1];
+    var rowHeight = last.bottom - last.top;
+    if (clientY <= last.bottom + Math.max(40, rowHeight * 0.6)) {
+      return pickInRow(last);
+    }
+    return { index: columns.length, rowBreak: true };
   }
 
   function endTeamDrag(e, commit) {
@@ -1234,7 +1268,7 @@
     d.column.classList.remove('dragging-source');
     teamDragState = null;
     if (commit && d.hoverIndex !== null) {
-      moveTeam(d.teamId, d.hoverIndex);
+      moveTeam(d.teamId, d.hoverIndex.index, d.hoverIndex.rowBreak);
       render();
     }
   }
